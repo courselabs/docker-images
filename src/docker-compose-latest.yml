@@ -1,7 +1,9 @@
 version: "3.7"
 
 services:  
+
+  gogs:
+    image: courselabs/gogs
+
   jenkins:
     image: courselabs/jenkins
-    build:
-      context: ./jenkins
