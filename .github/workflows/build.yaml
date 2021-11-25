@@ -1,0 +1,32 @@
+name: Image builds
+
+on:
+  push:
+    paths:
+      - ".github/workflows/build.yaml"
+      - "src/**"
+  schedule:
+    - cron: "0 21 * * 0"
+
+jobs:
+  image-builds:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: version
+        working-directory: ./src
+        run: |
+          docker-compose build 
+          docker-compose push
+
+      - name: latest
+        working-directory: ./src
+        run: |
+          docker-compose -f docker-compose.yml -f docker-compose-latest.yml build 
+          docker-compose -f docker-compose.yml -f docker-compose-latest.yml push

@@ -1,0 +1,7 @@
+version: "3.7"
+
+services:  
+  jenkins:
+    image: courselabs/jenkins:2.303.3
+    build:
+      context: ./jenkins
