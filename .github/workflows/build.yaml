@@ -29,5 +29,5 @@ jobs:
       - name: latest
         working-directory: ./src
         run: |
-          docker-compose -f docker-compose.yml -f docker-compose-latest.yml build 
+          docker-compose -f docker-compose.yml -f docker-compose-latest.yml build --pull
           docker-compose -f docker-compose.yml -f docker-compose-latest.yml push
