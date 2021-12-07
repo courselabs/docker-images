@@ -7,6 +7,6 @@ services:
       context: ./gogs
 
   jenkins:
-    image: courselabs/jenkins:2.303.3
+    image: courselabs/jenkins:2.319.1
     build:
       context: ./jenkins

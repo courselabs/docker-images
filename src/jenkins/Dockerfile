@@ -1,4 +1,7 @@
-FROM alpine:3.15 AS packages
+ARG ALPINE_VERSION="3.15"
+ARG TRIVY_VERSION="0.21.1"
+
+FROM alpine:$ALPINE_VERSION AS packages
 
 ARG KUBECTL_VERSION="1.22.4-r0"
 ARG DOCKER_CLI_VERSION="20.10.11-r0"
@@ -6,7 +9,7 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/te
     kubectl=$KUBECTL_VERSION \
     docker-cli=$DOCKER_CLI_VERSION
 
-FROM alpine:3.15 AS downloads
+FROM alpine:$ALPINE_VERSION AS downloads
 
 ARG BUILDKIT_VERSION="v0.9.3"
 WORKDIR /downloads/buildkit
@@ -22,14 +25,16 @@ ARG COMPOSE_VERSION="v2.2.0"
 WORKDIR /downloads/compose
 RUN wget https://github.com/docker/compose/releases/download/$COMPOSE_VERSION/docker-compose-linux-x86_64
 
-FROM alpine:3.15 AS jenkins
+FROM aquasec/trivy:$TRIVY_VERSION AS trivy
 
-ARG JENKINS_VERSION="2.303.3"
+FROM alpine:$ALPINE_VERSION AS jenkins
+
+ARG JENKINS_VERSION="2.319.1"
 WORKDIR /downloads/jenkins
 RUN wget http://mirrors.jenkins.io/war-stable/$JENKINS_VERSION/jenkins.war
 
 # Jenkins
-FROM alpine:3.15
+FROM alpine:$ALPINE_VERSION
 
 # jenkins deps
 RUN apk add --no-cache \
@@ -42,10 +47,7 @@ RUN apk add --no-cache \
     ttf-dejavu \
     unzip 
     
-ARG JENKINS_VERSION="2.303.3"
-ENV JENKINS_VERSION=${JENKINS_VERSION} \
-    JENKINS_HOME="/data"
-
+ENV JENKINS_HOME="/data"
 VOLUME ${JENKINS_HOME}
 
 EXPOSE 8080
@@ -58,6 +60,7 @@ COPY --from=downloads /downloads/buildkit/bin/buildctl /usr/bin/buildctl
 COPY --from=downloads /downloads/helm/linux-amd64/helm /usr/bin/helm
 COPY --from=downloads /downloads/compose/docker-compose-linux-x86_64 /root/.docker/cli-plugins/docker-compose
 
+COPY --from=trivy /usr/local/bin/trivy /usr/local/bin/trivy
 COPY --from=jenkins /downloads/jenkins/jenkins.war /jenkins/jenkins.war
 
 COPY ./jenkins.install.UpgradeWizard.state ${JENKINS_HOME}/
