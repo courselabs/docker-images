@@ -10,6 +10,11 @@ services:
     image: courselabs/jenkins:2.319.1
     build:
       context: ./jenkins
+
+  sonarqube:
+    image: courselabs/sonarqube:9.2.1
+    build:
+      context: ./sonarqube
   
   elasticsearch:
     image: courselabs/elasticsearch:7.10
