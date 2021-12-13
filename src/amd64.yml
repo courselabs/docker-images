@@ -15,13 +15,3 @@ services:
 
   kibana:
     image: courselabs/kibana:7.10-linux-amd64
-
-
-  prometheus:
-    image: courselabs/prometheus:v2.28.1-linux-amd64
-
-  grafana:
-    image: courselabs/grafana:8.0.5-linux-amd64
-
-  jaeger:
-    image: courselabs/jaeger:1.24-linux-amd64

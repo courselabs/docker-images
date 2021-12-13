@@ -1,16 +1,17 @@
-version: '3.7'
+version: "3.7"
 
-services:
+services:  
+  gogs:
+    image: courselabs/gogs:0.12.3-linux-arm64
 
+  jenkins:
+    image: courselabs/jenkins:2.319.1-linux-arm64
   
-  node-exporter:
-    image: courselabs/node-exporter:latest-linux-arm64
+  elasticsearch:
+    image: courselabs/elasticsearch:7.10-linux-arm64
 
-  prometheus:
-    image: courselabs/prometheus:v2.28.1-linux-arm64
+  logstash:
+    image: courselabs/logstash:7.10-linux-arm64
 
-  grafana:
-    image: courselabs/grafana:8.0.5-linux-arm64
-
-  jaeger:
-    image: courselabs/jaeger:1.24-linux-arm64
+  kibana:
+    image: courselabs/kibana:7.10-linux-arm64
