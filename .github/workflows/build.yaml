@@ -23,11 +23,11 @@ jobs:
       - name: version
         working-directory: ./src
         run: |
-          docker-compose build 
-          docker-compose push
+          docker-compose -f compose.yml -f amd64.yml build 
+          docker-compose -f compose.yml -f amd64.yml push
 
-      - name: latest
-        working-directory: ./src
-        run: |
-          docker-compose -f docker-compose.yml -f docker-compose-latest.yml build --pull
-          docker-compose -f docker-compose.yml -f docker-compose-latest.yml push
+#      - name: latest
+#        working-directory: ./src
+#        run: |
+#          docker-compose -f compose.yml -f latest.yml build --pull
+#          docker-compose -f compose.yml -f latest.yml push
