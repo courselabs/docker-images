@@ -53,6 +53,7 @@ RUN set -eux; \
     apk del --purge build-dependencies;
 
 COPY --chown=sonarqube:sonarqube run.sh sonar.sh ${SONARQUBE_HOME}/bin/
+RUN chmod +x ${SONARQUBE_HOME}/bin/*.sh
 
 WORKDIR ${SONARQUBE_HOME}
 EXPOSE 9000
