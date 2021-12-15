@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  image-builds:
+  build-linux-amd64:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -23,11 +23,22 @@ jobs:
       - name: version
         working-directory: ./src
         run: |
-          docker-compose -f compose.yml -f amd64.yml build 
+          docker-compose -f compose.yml -f amd64.yml build --pull
           docker-compose -f compose.yml -f amd64.yml push
 
-#      - name: latest
-#        working-directory: ./src
-#        run: |
-#          docker-compose -f compose.yml -f latest.yml build --pull
-#          docker-compose -f compose.yml -f latest.yml push
+
+  build-linux-arm64:
+    runs-on: [self-hosted, linux, arm64, docker]
+    steps:
+      - uses: actions/checkout@master  
+
+      - uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: version
+        working-directory: ./src
+        run: |
+          docker-compose -f compose.yml -f arm64.yml build --pull
+          docker-compose -f compose.yml -f arm64.yml push
