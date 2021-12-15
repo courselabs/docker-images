@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: version
+      - name: versioned-images
         working-directory: ./src
         run: |
           docker-compose -f compose.yml -f amd64.yml build --pull
@@ -37,8 +37,8 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: version
+      - name: versioned-images
         working-directory: ./src
         run: |
-          docker-compose -f compose.yml -f arm64.yml build --pull
-          docker-compose -f compose.yml -f arm64.yml push
+          docker compose -f compose.yml -f arm64.yml build --pull
+          docker compose -f compose.yml -f arm64.yml push
