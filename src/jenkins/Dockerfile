@@ -12,12 +12,15 @@ RUN ARCH2= && alpineArch="$(apk --print-arch)" \
     esac && \
     echo $ARCH2 > /arch2.txt 
 
-FROM download-base AS packages
-ARG KUBECTL_VERSION="1.22.4-r0"
+FROM download-base AS docker
 ARG DOCKER_CLI_VERSION="20.10.11-r0"
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
-    kubectl=$KUBECTL_VERSION \
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
     docker-cli=$DOCKER_CLI_VERSION
+
+FROM download-base AS kubectl
+ARG KUBECTL_VERSION="1.23.1-r0"
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+    kubectl=$KUBECTL_VERSION
 
 FROM download-base AS buildkit
 ARG BUILDKIT_VERSION="v0.9.3"
@@ -59,9 +62,8 @@ VOLUME ${JENKINS_HOME}
 EXPOSE 8080
 ENTRYPOINT /start.sh
 
-COPY --from=packages /usr/bin/kubectl /usr/bin/kubectl
-COPY --from=packages /usr/bin/docker /usr/bin/docker
-
+COPY --from=kubectl /usr/bin/kubectl /usr/bin/kubectl
+COPY --from=docker /usr/bin/docker /usr/bin/docker
 COPY --from=buildkit /downloads/bin/buildctl /usr/bin/buildctl
 COPY --from=helm /downloads/helm /usr/bin/helm
 COPY --from=compose /downloads/docker-compose /root/.docker/cli-plugins/docker-compose
