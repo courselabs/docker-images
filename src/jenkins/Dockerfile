@@ -13,12 +13,12 @@ RUN ARCH2= && alpineArch="$(apk --print-arch)" \
     echo $ARCH2 > /arch2.txt 
 
 FROM download-base AS docker
-ARG DOCKER_CLI_VERSION="20.10.11-r0"
+ARG DOCKER_CLI_VERSION="20.10.17-r0"
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
     docker-cli=$DOCKER_CLI_VERSION
 
 FROM download-base AS kubectl
-ARG KUBECTL_VERSION="1.23.1-r0"
+ARG KUBECTL_VERSION="1.24.2-r1"
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
     kubectl=$KUBECTL_VERSION
 
@@ -39,7 +39,7 @@ RUN wget -O docker-compose "https://github.com/docker/compose/releases/download/
 FROM aquasec/trivy:$TRIVY_VERSION AS trivy
 
 FROM download-base AS jenkins
-ARG JENKINS_VERSION="2.319.1"
+ARG JENKINS_VERSION="2.346.1"
 RUN wget http://mirrors.jenkins.io/war-stable/$JENKINS_VERSION/jenkins.war
 
 # Jenkins
